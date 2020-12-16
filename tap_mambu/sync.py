@@ -363,6 +363,14 @@ def sync(client, config, catalog, state):
     deposit_transactions_dt_str = transform_datetime(deposit_transactions_dttm_str)[:10]
     # LOGGER.info('deposit_transactions bookmark_date = {}'.format(deposit_transactions_dt_str))
 
+    clients_dttm_str = get_bookmark(state, 'clients', 'self', start_date)
+    clients_dt_str = transform_datetime(clients_dttm_str)[:10]
+    # LOGGER.info('clients bookmark_date = {}'.format(clients_dt_str))
+
+    deposit_accounts_v1_str = get_bookmark(state, 'deposit_accounts_v1', 'self', start_date)
+    deposit_accounts_v1_dt_str = transform_datetime(deposit_accounts_v1_str)[:10]
+    # LOGGER.info('deposit_accounts_v1 bookmark_date = {}'.format(clients_dt_str))
+
     loan_transactions_dttm_str = get_bookmark(state, 'loan_transactions', 'self', start_date)
     loan_transactions_dt_str = transform_datetime(loan_transactions_dttm_str)[:10]
     loan_transactions_dttm = strptime_to_utc(loan_transactions_dt_str)
@@ -440,12 +448,24 @@ def sync(client, config, catalog, state):
             'id_fields': ['id']
         },
         'clients': {
-            'path': 'clients',
+            'path': 'clients:search',
             'api_version': 'v2',
-            'api_method': 'GET',
+            'api_method': 'POST',
             'params': {
-                'sortBy': 'lastModifiedDate:ASC',
                 'detailsLevel': 'FULL'
+            },
+            'body': {
+                "sortingCriteria": {
+                    "field": "lastModifiedDate",
+                    "order": "ASC"
+                },
+                "filterCriteria": [
+                    {
+                        "field": "lastModifiedDate",
+                        "operator": "AFTER",
+                        "value": clients_dt_str
+                    }
+                ]
             },
             'bookmark_field': 'last_modified_date',
             'bookmark_type': 'datetime',
@@ -495,6 +515,40 @@ def sync(client, config, catalog, state):
                     'parent': 'deposit'
                 }
             }
+        },
+        'deposit_accounts_v1': {
+            'path': 'savings/search',
+            'api_version': 'v1',
+            'api_method': 'POST',
+            'params': {
+                'sortBy': 'lastModifiedDate:ASC',
+                'fullDetails': 'true'
+            },
+            'body': {
+                "filterConstraints": [
+                    {
+                        "filterSelection": "LAST_MODIFIED_DATE",
+                        "filterElement": "AFTER",
+                        "value": deposit_accounts_v1_dt_str
+                    }
+                ]
+            },
+            'bookmark_field': 'last_modified_date',
+            'bookmark_type': 'datetime',
+            'id_fields': ['id'],
+            'store_ids': True,
+            # 'children': {
+            #     'cards': {
+            #         'path': 'deposits/{}/cards',
+            #         'api_version': 'v2',
+            #         'api_method': 'GET',
+            #         'params': {
+            #             'detailsLevel': 'FULL'
+            #         },
+            #         'id_fields': ['deposit_id', 'reference_token'],
+            #         'parent': 'deposit'
+            #     }
+            # }
         },
         'deposit_products': {
             'path': 'savingsproducts',
