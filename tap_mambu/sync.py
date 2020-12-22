@@ -366,10 +366,10 @@ def sync(client, config, catalog, state):
     clients_dttm_str = get_bookmark(state, 'clients', 'self', start_date)
     clients_dt_str = transform_datetime(clients_dttm_str)[:10]
     # LOGGER.info('clients bookmark_date = {}'.format(clients_dt_str))
-
-    deposit_accounts_v1_str = get_bookmark(state, 'deposit_accounts_v1', 'self', start_date)
-    deposit_accounts_v1_dt_str = transform_datetime(deposit_accounts_v1_str)[:10]
-    # LOGGER.info('deposit_accounts_v1 bookmark_date = {}'.format(clients_dt_str))
+     
+    saving_accounts_str = get_bookmark(state, 'saving_accounts', 'self', start_date)
+    saving_accounts_dt_str = transform_datetime(saving_accounts_str)[:10]
+    # LOGGER.info('saving_accounts bookmark_date = {}'.format(saving_accounts_dt_str))
 
     loan_transactions_dttm_str = get_bookmark(state, 'loan_transactions', 'self', start_date)
     loan_transactions_dt_str = transform_datetime(loan_transactions_dttm_str)[:10]
@@ -516,20 +516,20 @@ def sync(client, config, catalog, state):
                 }
             }
         },
-        'deposit_accounts_v1': {
+        'saving_accounts': {
             'path': 'savings/search',
             'api_version': 'v1',
             'api_method': 'POST',
             'params': {
                 'sortBy': 'lastModifiedDate:ASC',
-                'fullDetails': 'true'
+                'fullDetails': True
             },
             'body': {
                 "filterConstraints": [
                     {
                         "filterSelection": "LAST_MODIFIED_DATE",
                         "filterElement": "AFTER",
-                        "value": deposit_accounts_v1_dt_str
+                        "value": saving_accounts_dt_str
                     }
                 ]
             },
@@ -537,18 +537,6 @@ def sync(client, config, catalog, state):
             'bookmark_type': 'datetime',
             'id_fields': ['id'],
             'store_ids': True,
-            # 'children': {
-            #     'cards': {
-            #         'path': 'deposits/{}/cards',
-            #         'api_version': 'v2',
-            #         'api_method': 'GET',
-            #         'params': {
-            #             'detailsLevel': 'FULL'
-            #         },
-            #         'id_fields': ['deposit_id', 'reference_token'],
-            #         'parent': 'deposit'
-            #     }
-            # }
         },
         'deposit_products': {
             'path': 'savingsproducts',
