@@ -368,7 +368,7 @@ def sync(client, config, catalog, state):
     # LOGGER.info('clients bookmark_date = {}'.format(clients_dt_str))
      
     saving_accounts_str = get_bookmark(state, 'saving_accounts', 'self', start_date)
-    saving_accounts_dt_str = transform_datetime(saving_accounts_str)[:10]
+    saving_accounts_dt_str = transform_datetime(saving_accounts_str)[:19].replace('T', ' ')
     # LOGGER.info('saving_accounts bookmark_date = {}'.format(saving_accounts_dt_str))
 
     loan_transactions_dttm_str = get_bookmark(state, 'loan_transactions', 'self', start_date)
