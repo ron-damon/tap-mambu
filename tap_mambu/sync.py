@@ -360,11 +360,11 @@ def sync(client, config, catalog, state):
     # LOGGER.info('communications bookmark_date = {}'.format(communications_dt_str))
 
     deposit_transactions_dttm_str = get_bookmark(state, 'deposit_transactions', 'self', start_date)
-    deposit_transactions_dt_str = transform_datetime(deposit_transactions_dttm_str)[:10]
+    deposit_transactions_dt_str = transform_datetime(deposit_transactions_dttm_str)[:19]+'Z'
     # LOGGER.info('deposit_transactions bookmark_date = {}'.format(deposit_transactions_dt_str))
 
     clients_dttm_str = get_bookmark(state, 'clients', 'self', start_date)
-    clients_dt_str = transform_datetime(clients_dttm_str)[:10]
+    clients_dt_str = transform_datetime(clients_dttm_str)[:19]+'Z'
     # LOGGER.info('clients bookmark_date = {}'.format(clients_dt_str))
      
     saving_accounts_str = get_bookmark(state, 'saving_accounts', 'self', start_date)
