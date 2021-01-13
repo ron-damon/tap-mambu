@@ -9,8 +9,8 @@ setup(name='tap-mambu',
       classifiers=['Programming Language :: Python :: 3 :: Only'],
       py_modules=['tap_mambu'],
       install_requires=[
-          'backoff==1.8.0',
-          'requests==2.23.0',
+          'backoff>=1.8.0,<2.0.0',
+          'requests>=2.23.0,<3.0.0',
           'singer-python==5.9.0'
       ],
       extras_require={
